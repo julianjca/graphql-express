@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "airbnb"
+  ],
+  "rules": {
+    "indent": [
+      "error",
+      2
+    ],
+    "no-underscore-dangle": 0,
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "no-console": "off"
+  }
+}
