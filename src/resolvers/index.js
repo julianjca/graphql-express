@@ -6,6 +6,7 @@ const {
 } = require('apollo-server-express');
 
 const { hashPassword, verifyPassword, createCookie } = require('../utils');
+const { logger } = require('../helpers');
 
 const JWT_SECRET = config.get('Customer.JWT');
 
@@ -26,6 +27,11 @@ const resolvers = {
       const { email } = jwt.verify(userToken, JWT_SECRET);
       const userData = await db.user.findOne({
         where: { email },
+      });
+
+      logger.log({
+        level: 'info',
+        message: 'Hello distributed log files!',
       });
 
       return userData;
@@ -54,6 +60,11 @@ const resolvers = {
 
       const userToken = jwt.sign(createdUser.get({ plain: true }), JWT_SECRET);
 
+      logger.log({
+        level: 'info',
+        message: `NEW USER ${firstName} ${lastName || ''} - ${email}`,
+      });
+
       createCookie(res, 'userToken', userToken, 1000 * 24 * 60 * 60 * 7);
 
       return {
@@ -70,6 +81,11 @@ const resolvers = {
       if (isUserVerified) {
         const userToken = await jwt.sign(userData.get({ plain: true }), JWT_SECRET);
         createCookie(res, 'userToken', userToken, 1000 * 24 * 60 * 60 * 7);
+
+        logger.log({
+          level: 'info',
+          message: `LOGIN USER ${email}`,
+        });
 
         return {
           userToken,
