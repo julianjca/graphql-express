@@ -5,8 +5,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 // const faker = require('faker');
 
-const typeDefs = require('./graphql/schema');
-const resolvers = require('./graphql/resolvers/User');
+const typeDefs = require('./typeDefs');
+const resolvers = require('./resolvers');
 const db = require('./models');
 
 

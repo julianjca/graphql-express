@@ -5,7 +5,7 @@ const {
   AuthenticationError,
 } = require('apollo-server-express');
 
-const { hashPassword, verifyPassword, createCookie } = require('../../../utils');
+const { hashPassword, verifyPassword, createCookie } = require('../utils');
 
 const JWT_SECRET = config.get('Customer.JWT');
 
