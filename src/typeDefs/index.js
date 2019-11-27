@@ -2,17 +2,17 @@ const { gql } = require('apollo-server-express');
 
 const Schema = gql`
   type User {
-    id: ID!
-    firstName: String!
-    lastName: String!
+    first_name: String!
+    last_name: String!
     email: String!
     password: String!
+    phone_number: String!
   }
   type Me {
-    firstName: String!
-    lastName: String!
-    id: ID!
+    first_name: String!
+    last_name: String!
     email: String!
+    phone_number: String!
   }
   type TokenData {
     userToken: String!
@@ -24,7 +24,7 @@ const Schema = gql`
     me: Me!
   }
   type Mutation {
-    createUser(firstName: String!, lastName:String, email: String! password: String!): TokenData!
+    createUser(first_name: String!, last_name:String, email: String!, password: String!, phone_number: String!): TokenData!
     login(email: String!, password: String!): TokenData!
   }
 `;

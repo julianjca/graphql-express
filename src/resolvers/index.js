@@ -5,18 +5,21 @@ const {
   AuthenticationError,
 } = require('apollo-server-express');
 
-const { hashPassword, verifyPassword, createCookie } = require('../utils');
+const {
+  hashPassword, verifyPassword, createCookie,
+} = require('../utils');
 const { logger } = require('../helpers');
 
 const JWT_SECRET = config.get('Customer.JWT');
+
 
 const resolvers = {
   Query: {
     users: (parent, args, { db, userId }) => {
       console.log(userId);
-      return db.user.findAll();
+      return db.User.findAll();
     },
-    user: (parent, args, { db }) => db.user.findOne({
+    user: (parent, args, { db }) => db.User.findOne({
       firstName: args.firstName,
     }),
     me: async (parent, args, { req, db }) => {
@@ -25,7 +28,7 @@ const resolvers = {
       if (!userToken) throw new AuthenticationError('You are logged out');
 
       const { email } = jwt.verify(userToken, JWT_SECRET);
-      const userData = await db.user.findOne({
+      const userData = await db.User.findOne({
         where: { email },
       });
 
@@ -39,9 +42,9 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (parent, {
-      firstName, lastName, email, password,
+      first_name, last_name, email, password, phone_number,
     }, { db, res }) => {
-      const isUserRegistered = await db.user.findOne({
+      const isUserRegistered = await db.User.findOne({
         where: { email },
       });
 
@@ -50,11 +53,12 @@ const resolvers = {
       }
       const hashedPassword = await hashPassword(password);
 
-      const createdUser = await db.user.create({
-        firstName,
-        lastName,
+      const createdUser = await db.User.create({
+        first_name,
+        last_name,
         email,
         password: hashedPassword,
+        phone_number,
       });
       delete createdUser.password;
 
@@ -62,7 +66,7 @@ const resolvers = {
 
       logger.log({
         level: 'info',
-        message: `NEW USER ${firstName} ${lastName || ''} - ${email}`,
+        message: `NEW USER ${first_name} ${last_name || ''} - ${email}`,
       });
 
       createCookie(res, 'userToken', userToken, 1000 * 24 * 60 * 60 * 7);
@@ -72,7 +76,7 @@ const resolvers = {
       };
     },
     login: async (parent, { email, password }, { db, res }) => {
-      const userData = await db.user.findOne({
+      const userData = await db.User.findOne({
         where: { email },
       });
 

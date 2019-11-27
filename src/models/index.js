@@ -1,19 +1,25 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
+/* eslint-disable prefer-template */
+/* eslint-disable no-path-concat */
 /* eslint-disable import/no-dynamic-require */
+/* eslint-disable security/detect-non-literal-require */
+/* eslint-disable security/detect-object-injection */
+
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const config = require('config');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const dbConfig = config.get('postgres')[env];
+const config = require('../database/config/config.js')[env];
+
 const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[dbConfig.use_env_variable], dbConfig);
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
 fs

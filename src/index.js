@@ -9,7 +9,6 @@ const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
 const db = require('./models');
 
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -31,7 +30,7 @@ app.use(cookieParser())
   .use(bodyParser.urlencoded({ extended: true }));
 server.applyMiddleware({ app });
 
-app.get('/logout', (req, res) => {
+app.get('/logout', (_, res) => {
   res.clearCookie('userToken');
   res.status(200).json({
     success: true,
