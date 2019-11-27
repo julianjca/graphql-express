@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
     },
+    last_logged_in: DataTypes.DATE,
   }, {});
   // User.associate = function (models) {
   //   // associations can be defined here

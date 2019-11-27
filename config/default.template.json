@@ -10,15 +10,5 @@
       "initialDays": 1
     },
     "JWT": "test123"
-  },
-  "postgres": {
-    "development": {
-      "username": "",
-      "password": "",
-      "database": "",
-      "host": "",
-      "dialect": "postgres",
-      "operatorsAliases": false
-    }
   }
 }

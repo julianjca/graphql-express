@@ -15,7 +15,7 @@ const JWT_SECRET = config.get('Customer.JWT');
 
 const resolvers = {
   Query: {
-    users: (parent, args, { db, userId }) => {
+    users: (_, args, { db, userId }) => {
       console.log(userId);
       return db.User.findAll();
     },
@@ -41,7 +41,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (parent, {
+    createUser: async (_, {
       first_name, last_name, email, password, phone_number,
     }, { db, res }) => {
       const isUserRegistered = await db.User.findOne({
@@ -75,26 +75,31 @@ const resolvers = {
         userToken,
       };
     },
-    login: async (parent, { email, password }, { db, res }) => {
+    login: async (_, { email, password }, { db, res }) => {
       const userData = await db.User.findOne({
         where: { email },
       });
 
-      const isUserVerified = await verifyPassword(userData.password, password);
+      if (userData) {
+        const isUserVerified = await verifyPassword(userData.password, password);
 
-      if (isUserVerified) {
-        const userToken = await jwt.sign(userData.get({ plain: true }), JWT_SECRET);
-        createCookie(res, 'userToken', userToken, 1000 * 24 * 60 * 60 * 7);
+        if (isUserVerified) {
+          const userToken = await jwt.sign(userData.get({ plain: true }), JWT_SECRET);
+          createCookie(res, 'userToken', userToken, 1000 * 24 * 60 * 60 * 7);
 
-        logger.log({
-          level: 'info',
-          message: `LOGIN USER ${email}`,
-        });
+          userData.update({ last_logged_in: new Date() });
 
-        return {
-          userToken,
-        };
+          logger.log({
+            level: 'info',
+            message: `LOGIN USER ${email}`,
+          });
+
+          return {
+            userToken,
+          };
+        }
       }
+
       throw new AuthenticationError('Wrong email/password');
     },
   },
