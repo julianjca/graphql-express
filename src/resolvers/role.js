@@ -4,16 +4,14 @@ const jwt = require('jsonwebtoken');
 const {
   AuthenticationError,
 } = require('apollo-server-express');
-
-const JWT_SECRET = config.get('Customer.JWT');
+const { checkAdminRole } = require('../utils');
 
 const resolvers = {
   Mutation: {
     createRole: (_, { name, description }, { db, req }) => {
-      const { cookies: { userToken } } = req;
-      const { RoleId } = jwt.verify(userToken, JWT_SECRET);
+      const isAdmin = checkAdminRole(req);
 
-      if (!RoleId || RoleId !== 1) {
+      if (!isAdmin) {
         throw new AuthenticationError('You are not authenticated');
       }
 
@@ -21,6 +19,28 @@ const resolvers = {
         name,
         description,
       });
+    },
+    assignRole: async (_, { email, roleNumber }, { db, req }) => {
+      const isAdmin = checkAdminRole(req);
+
+      if (!isAdmin) {
+        throw new AuthenticationError('You are not authenticated');
+      }
+
+      const user = await db.User.findOne({
+        where: { email },
+      });
+
+      try {
+        await user.setRole(roleNumber);
+        return {
+          email,
+          roleNumber,
+          success: true,
+        };
+      } catch (e) {
+        throw new Error('error updating role');
+      }
     },
   },
 };

@@ -1,4 +1,8 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+
+const JWT_SECRET = config.get('Customer.JWT');
 
 const SALT_ROUNDS = 10;
 
@@ -11,6 +15,12 @@ const createCookie = (res, cookieName, cookieValue, maxAge) => res.cookie(cookie
   maxAge,
 });
 
+const checkAdminRole = (req) => {
+  const { cookies: { userToken } } = req;
+  const { RoleId = null } = jwt.verify(userToken, JWT_SECRET);
+  return RoleId && RoleId === 1;
+};
+
 const getIP = (req) => req.headers['x-forwarded-for']
     || req.connection.remoteAddress
     || req.socket.remoteAddress
@@ -21,4 +31,5 @@ module.exports = {
   verifyPassword,
   createCookie,
   getIP,
+  checkAdminRole,
 };

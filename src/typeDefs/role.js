@@ -5,11 +5,21 @@ const Role = gql`
     name: String!
     description: String
   }
+  type AssignRole {
+    email: String
+    roleNumber: Int
+    success: Boolean
+  }
 
   extend type Mutation {
     createRole(
       name: String!,
-      description: String): Role
+      description: String
+    ): Role
+    assignRole(
+      email: String!
+      roleNumber: Int
+    ): AssignRole
   }
 `;
 
