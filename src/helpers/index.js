@@ -1,5 +1,16 @@
-const logger = require('./logger');
+/* eslint-disable security/detect-object-injection */
+const modules = require('require-all')({
+  dirname: __dirname,
+  recursive: true,
+});
+const { reduce } = require('lodash');
 
-module.exports = {
-  logger,
-};
+const helpers = reduce(modules, (acc, item, key) => {
+  if (key !== 'index') {
+    acc[key] = item;
+  }
+  return acc;
+}, {});
+
+
+module.exports = helpers;
