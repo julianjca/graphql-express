@@ -8,6 +8,7 @@ const User = gql`
     password: String!
     phone_number: String!
     role: Role
+    balance: Int
   }
   type Me {
     first_name: String!
@@ -16,6 +17,7 @@ const User = gql`
     phone_number: String!
     RoleId: Int
     Role: Role
+    balance: Int
   }
   type TokenData {
     userToken: String!
