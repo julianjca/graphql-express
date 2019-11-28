@@ -1,5 +1,8 @@
 const { forEach, merge, isEmpty } = require('lodash');
-const libs = require('require-all')(`${__dirname}`);
+const libs = require('require-all')({
+  dirname: __dirname,
+  recursive: true,
+});
 
 const resolvers = {
   Query: {},

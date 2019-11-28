@@ -1,38 +1,12 @@
-const { gql } = require('apollo-server-express');
+// const { gql } = require('apollo-server-express');
+const { isEmpty, map } = require('lodash');
+const schema = require('require-all')({
+  dirname: __dirname,
+  recursive: true,
+});
 
-const Schema = gql`
-  type User {
-    first_name: String!
-    last_name: String!
-    email: String!
-    password: String!
-    phone_number: String!
-    role: Role
-  }
-  type Me {
-    first_name: String!
-    last_name: String!
-    email: String!
-    phone_number: String!
-  }
-  type TokenData {
-    userToken: String!
-  }
-  type Role {
-    name: String!
-    description: String
-  }
-  
-  type Query {
-    user(firstName: String!): User
-    users: [User!]!
-    me: Me!
-  }
-  type Mutation {
-    createUser(first_name: String!, last_name:String, email: String!, password: String!, phone_number: String!): TokenData!
-    login(email: String!, password: String!): TokenData!
-    createRole(name: String!, description: String): Role
-  }
-`;
+const typeDefs = map(schema, (element) => (!isEmpty(element) ? element : {}));
+// Remove {} (empty object)
+typeDefs.splice(0, 1);
 
-module.exports = Schema;
+module.exports = typeDefs;
