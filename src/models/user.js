@@ -15,8 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     last_logged_in: DataTypes.DATE,
   }, {});
-  // User.associate = function (models) {
-  //   // associations can be defined here
-  // };
+  User.associate = (models) => {
+    // models.User.belongsTo(models.UserRole, { foreignKey: 'email', targetKey: 'user_email' });
+    models.User.belongsTo(models.Role);
+  };
   return User;
 };

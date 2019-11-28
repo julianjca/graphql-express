@@ -15,10 +15,7 @@ const JWT_SECRET = config.get('Customer.JWT');
 
 const resolvers = {
   Query: {
-    users: (_, args, { db, userId }) => {
-      console.log(userId);
-      return db.User.findAll();
-    },
+    users: (_, args, { db }) => db.User.findAll(),
     user: (parent, args, { db }) => db.User.findOne({
       firstName: args.firstName,
     }),
@@ -70,6 +67,7 @@ const resolvers = {
       });
 
       createCookie(res, 'userToken', userToken, 1000 * 24 * 60 * 60 * 7);
+      createdUser.setRole(1);
 
       return {
         userToken,
@@ -79,6 +77,7 @@ const resolvers = {
       const userData = await db.User.findOne({
         where: { email },
       });
+
 
       if (userData) {
         const isUserVerified = await verifyPassword(userData.password, password);
@@ -102,6 +101,10 @@ const resolvers = {
 
       throw new AuthenticationError('Wrong email/password');
     },
+    createRole: (_, { name, description }, { db }) => db.Role.create({
+      name,
+      description,
+    }),
   },
 };
 

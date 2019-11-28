@@ -37,4 +37,7 @@ app.get('/logout', (_, res) => {
   });
 });
 
+// https://medium.com/@edtimmer/sequelize-associations-basics-bde90c0deeaa
+// Sync DB
+// db.sequelize.sync({ force: true });
 module.exports = app;
