@@ -6,7 +6,7 @@ const {
 } = require('apollo-server-express');
 
 const {
-  hashPassword, verifyPassword, createCookie,
+  hashPassword, verifyPassword, createCookie, formatPhoneNumber,
 } = require('../utils');
 const { logger } = require('../helpers');
 
@@ -65,7 +65,7 @@ const resolvers = {
         last_name,
         email,
         password: hashedPassword,
-        phone_number,
+        phone_number: formatPhoneNumber(phone_number),
       });
       delete createdUser.password;
 

@@ -21,6 +21,16 @@ const checkAdminRole = (req) => {
   return RoleId && RoleId === 1;
 };
 
+const formatPhoneNumber = (phoneNumber) => {
+  const firstDigit = phoneNumber[0];
+  if (firstDigit === '+') {
+    return phoneNumber.substr(1);
+  } if (firstDigit === '0') {
+    return `62${phoneNumber.substr(1)}`;
+  }
+  return phoneNumber;
+};
+
 const getIP = (req) => req.headers['x-forwarded-for']
     || req.connection.remoteAddress
     || req.socket.remoteAddress
@@ -32,4 +42,5 @@ module.exports = {
   createCookie,
   getIP,
   checkAdminRole,
+  formatPhoneNumber,
 };
