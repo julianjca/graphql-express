@@ -25,6 +25,7 @@ const resolvers = {
       if (!userToken) throw new AuthenticationError('You are logged out');
 
       const { email } = jwt.verify(userToken, JWT_SECRET);
+
       const userData = await db.User.findOne({
         where: { email },
       });
@@ -59,6 +60,7 @@ const resolvers = {
       });
       delete createdUser.password;
 
+      await createdUser.setRole(2);
       const userToken = jwt.sign(createdUser.get({ plain: true }), JWT_SECRET);
 
       logger.log({
@@ -67,7 +69,6 @@ const resolvers = {
       });
 
       createCookie(res, 'userToken', userToken, 1000 * 24 * 60 * 60 * 7);
-      createdUser.setRole(1);
 
       return {
         userToken,
@@ -101,10 +102,19 @@ const resolvers = {
 
       throw new AuthenticationError('Wrong email/password');
     },
-    createRole: (_, { name, description }, { db }) => db.Role.create({
-      name,
-      description,
-    }),
+    createRole: (_, { name, description }, { db, req }) => {
+      const { cookies: { userToken } } = req;
+      const { RoleId } = jwt.verify(userToken, JWT_SECRET);
+
+      if (!RoleId || RoleId !== 1) {
+        throw new AuthenticationError('You are not authenticated');
+      }
+
+      return db.Role.create({
+        name,
+        description,
+      });
+    },
   },
 };
 
