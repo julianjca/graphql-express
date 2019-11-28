@@ -14,6 +14,8 @@ const User = gql`
     last_name: String!
     email: String!
     phone_number: String!
+    RoleId: Int
+    Role: Role
   }
   type TokenData {
     userToken: String!

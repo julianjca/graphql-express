@@ -16,7 +16,7 @@ const createCookie = (res, cookieName, cookieValue, maxAge) => res.cookie(cookie
 });
 
 const checkAdminRole = (req) => {
-  const { cookies: { userToken } } = req;
+  const { cookies: { userToken = null } } = req;
   const { RoleId = null } = jwt.verify(userToken, JWT_SECRET);
   return RoleId && RoleId === 1;
 };

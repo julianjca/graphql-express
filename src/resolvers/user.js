@@ -27,12 +27,16 @@ const resolvers = {
     me: async (parent, args, { req, db }) => {
       const { cookies: { userToken } } = req;
 
-      if (!userToken) throw new AuthenticationError('You are logged out');
+      if (userToken === '') throw new AuthenticationError('You are logged out');
 
       const { email } = jwt.verify(userToken, JWT_SECRET);
-
       const userData = await db.User.findOne({
         where: { email },
+        include: [
+          {
+            model: db.Role,
+          },
+        ],
       });
 
       logger.log({
