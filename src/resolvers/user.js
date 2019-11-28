@@ -36,8 +36,12 @@ const resolvers = {
           {
             model: db.Role,
           },
+          {
+            model: db.UserTransaction,
+          },
         ],
       });
+      console.log(userData);
 
       logger.log({
         level: 'info',

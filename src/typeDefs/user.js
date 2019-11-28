@@ -18,6 +18,7 @@ const User = gql`
     RoleId: Int
     Role: Role
     balance: Int
+    UserTransactions: [Transaction]
   }
   type TokenData {
     userToken: String!
