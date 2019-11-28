@@ -1,5 +1,5 @@
 const { forEach, merge, isEmpty } = require('lodash');
-const libs = require('require-all')({
+const modules = require('require-all')({
   dirname: __dirname,
   recursive: true,
 });
@@ -9,7 +9,7 @@ const resolvers = {
   Mutation: {},
 };
 
-forEach(libs, (module) => {
+forEach(modules, (module) => {
   if (!isEmpty(module)) {
     const { Query = {}, Mutation = {} } = module;
     resolvers.Query = merge(resolvers.Query, Query);
