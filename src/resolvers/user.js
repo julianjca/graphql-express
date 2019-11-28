@@ -7,8 +7,8 @@ const {
 
 const {
   hashPassword, verifyPassword, createCookie,
-} = require('../../utils');
-const { logger } = require('../../helpers');
+} = require('../utils');
+const { logger } = require('../helpers');
 
 const JWT_SECRET = config.get('Customer.JWT');
 

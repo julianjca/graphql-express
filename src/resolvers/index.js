@@ -10,8 +10,8 @@ const resolvers = {
 };
 
 forEach(libs, (module) => {
-  if (!isEmpty(module.index)) {
-    const { Query = {}, Mutation = {} } = module.index;
+  if (!isEmpty(module)) {
+    const { Query = {}, Mutation = {} } = module;
     resolvers.Query = merge(resolvers.Query, Query);
     resolvers.Mutation = merge(resolvers.Mutation, Mutation);
   }
